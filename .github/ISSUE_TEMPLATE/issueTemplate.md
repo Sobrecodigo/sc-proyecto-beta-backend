@@ -1,32 +1,30 @@
 ---
-name: Bug Report
-about: Create a report to help us improve and fix issues
-title: "[BUG] Short description of the issue"
-labels: "bug"
-assignees: ""
+name: New Task
+about: Template to create a new task in the project
+title: '[TASK] Task name'
+labels: 'task'
+assignees: ''
 ---
 
-## Bug Description
-<!-- Provide a clear and concise description of the bug or issue you encountered. -->
+## Task Description
 
-## Steps to Reproduce
-<!-- List the steps to reproduce the issue. Include any necessary code snippets or configuration details. -->
+<!-- Provide a clear and concise description of the task to be accomplished. -->
 
-1. 
-2. 
-3. 
+## Steps to Follow
 
-## Expected Behavior
-<!-- Describe what you expected to happen when following the steps above. -->
+<!-- List the necessary steps to complete the task. You can use bullets or numbers to organize them. -->
 
-## Actual Behavior
-<!-- Describe what actually happened when following the steps above. -->
+1.
+2.
+3.
 
-## Screenshots
-<!-- If applicable, add screenshots that demonstrate the issue. -->
+## Acceptance Criteria
 
-## Environment
-<!-- Provide details about your environment (e.g., operating system, browser version, software version) where the bug occurred. -->
+<!-- Describe the criteria that must be met to consider the task as completed. -->
+
+- [ ]
+- [ ]
 
 ## Additional Information
-<!-- Add any additional information that may be helpful in understanding and resolving the issue. -->
+
+<!-- Add any additional information that may be relevant to the task. -->
