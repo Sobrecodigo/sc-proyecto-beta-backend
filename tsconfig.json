@@ -19,5 +19,5 @@
 		"resolveJsonModule": true,
 		"rootDir": "./src",
 		"esModuleInterop": true
-	}
+	},
 }
