@@ -1,9 +1,9 @@
 ---
 name: New Task
 about: Template to create a new task in the project
-title: '[TASK] Task name'
-labels: 'task'
-assignees: ''
+title: "[TASK] Task name"
+labels: "task"
+assignees: ""
 ---
 
 ## Task Description
