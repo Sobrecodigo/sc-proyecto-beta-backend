@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { EntityService } from './entityService';
+import { formatRes } from '../../utils';
 
 const entitiesRouter = Router();
 const service = new EntityService();
@@ -9,7 +10,10 @@ entitiesRouter.post('/', async (request: Request, response: Response, next: Next
 	try {
 		service.setter(body);
 		const entityRecord = await service.signUp();
-		response.json(entityRecord.toJSON());
+
+		const prepareResponse = formatRes('success', response.statusCode, { results: entityRecord.toJSON() });
+
+		response.json(prepareResponse);
 	} catch (exception) {
 		next(exception);
 	}
@@ -17,8 +21,11 @@ entitiesRouter.post('/', async (request: Request, response: Response, next: Next
 
 entitiesRouter.get('/all', async (_request: Request, response: Response, next: NextFunction) => {
 	try {
-		const entities = await service.getEntities();
-		response.json(entities);
+		const entities = (await service.getEntities()).map(entity => entity.toJSON());
+
+		const prepareResponse = formatRes('success', response.statusCode, { results: entities });
+
+		response.json(prepareResponse);
 	} catch (exception) {
 		next(exception);
 	}
@@ -28,7 +35,10 @@ entitiesRouter.put('/:id', async (request: Request, response: Response, next: Ne
 	const { body } = request;
 	try {
 		const updatedEntity = await service.update(request.params.id, body);
-		response.json(updatedEntity.toJSON());
+
+		const prepareResponse = formatRes('success', response.statusCode, { results: updatedEntity.toJSON() });
+
+		response.json(prepareResponse);
 	} catch (exception) {
 		next(exception);
 	}

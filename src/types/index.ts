@@ -1,6 +1,6 @@
-type DataResponse<TPayload extends object | object[]> = {
+export type DataResponse = {
   pagination?: PaginationResponse;
-  results?: TPayload;
+  results?: Record<string, unknown> | Record<string, unknown>[];
   warnings?: string[];
 };
 
@@ -10,10 +10,10 @@ export type PaginationResponse = {
   totalItems: number;
 };
 
-export type Response<TPayload extends object | object[]> = {
+export type ResponseObject = {
   status: 'success' | 'error' | 'info' | 'warning';
-  message: string;
-  data: DataResponse<TPayload>;
-  code?: number;
+  message?: string;
+  data: DataResponse;
+  code: number;
   meta?: unknown;
 };

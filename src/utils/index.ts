@@ -1,5 +1,6 @@
 import { config } from 'dotenv';
 import { entityTypes } from '../modules/entity/entityModel';
+import { DataResponse, ResponseObject } from '../types';
 export * from './middleware';
 config();
 
@@ -21,7 +22,6 @@ const isEmail = (email: string) => {
 	// eslint-disable-next-line no-useless-escape
 	return email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/);
 };
-
 
 export const parseEmail = (email: unknown): string => {
 	if (!email || !isString(email)) {
@@ -55,3 +55,17 @@ export const parseEntityType = (entityType: unknown): keyof typeof entityTypes =
 export const objectKeys = <Obj extends object>(obj: Obj): (keyof Obj)[] => {
 	return Object.keys(obj) as (keyof Obj)[];
 };
+
+export const formatRes = (
+	status: ResponseObject['status'],
+	statusCode: number,
+	payload: DataResponse,
+	message?: string,
+	meta?: string
+): ResponseObject => ({
+	status,
+	data: payload,
+	code: statusCode,
+	message,
+	meta
+});
