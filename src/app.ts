@@ -1,8 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { DATABASE_URI, PORT } from './utils';
+import { DATABASE_URI, PORT, requireJsonContent } from './utils';
 import bodyParser from 'body-parser';
-import entitiesRouter from './modules/entity/entityControllet';
+import entitiesRouter from './modules/entity/entityController';
 import { unknownEndpoint } from './utils';
 
 const app = express();
@@ -20,6 +20,7 @@ serverConnected();
 
 // parse application/json
 app.use(bodyParser.json());
+app.use(requireJsonContent);
 app.use('/api/entity', entitiesRouter);
 app.use(unknownEndpoint);
 

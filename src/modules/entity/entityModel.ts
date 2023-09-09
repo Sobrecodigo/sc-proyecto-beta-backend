@@ -1,9 +1,5 @@
 import { Schema, model, Document } from 'mongoose';
-
-export const entityTypes = {
-	CLIENT: 'CLIENT',
-	BANK: 'BANK',
-} as const;
+import { entityTypes } from '../../types';
 
 export interface IEntity extends Document {
   id: string;
