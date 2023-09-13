@@ -48,16 +48,18 @@ export const objectKeys = <Obj extends object>(obj: Obj): (keyof Obj)[] => {
 	return Object.keys(obj) as (keyof Obj)[];
 };
 
+export type ResponseContent = {
+	data?: DataResponse,
+	message?: string,
+	meta?: string
+}
+
 export const formatRes = (
 	status: ResponseObject['status'],
 	statusCode: number,
-	payload: DataResponse,
-	message?: string,
-	meta?: string
+	responseContent: ResponseContent
 ): ResponseObject => ({
 	status,
-	data: payload,
 	code: statusCode,
-	message,
-	meta
+	...responseContent,
 });

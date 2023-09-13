@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { DATABASE_URI, PORT, requireJsonContent } from './utils';
+import { DATABASE_URI, PORT, errorHandler, requestLogger, requireJsonContent } from './utils';
 import bodyParser from 'body-parser';
 import entitiesRouter from './modules/entity/entityController';
 import { unknownEndpoint } from './utils';
@@ -20,9 +20,11 @@ serverConnected();
 
 // parse application/json
 app.use(bodyParser.json());
+app.use(requestLogger);
 app.use(requireJsonContent);
 app.use('/api/entity', entitiesRouter);
 app.use(unknownEndpoint);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
 	console.log(`Server is running on http://localhost:${PORT}`);
