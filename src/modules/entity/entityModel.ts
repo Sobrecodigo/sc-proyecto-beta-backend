@@ -2,24 +2,24 @@ import { Schema, model, Document } from 'mongoose';
 import { entityTypes } from '../../types';
 
 export interface IEntity extends Document {
-  id: string;
-  firstName: string;
-  lastName: string;
-  identification: string;
-  email: string;
-  password: string;
-  fiscal_relation: string;
-  type: keyof typeof entityTypes;
-  created_at: Date;
-  updated_at: Date;
+	id: string;
+	firstName: string;
+	lastName: string;
+	identification: string;
+	email: string;
+	password: string;
+	fiscal_relation: string;
+	type: keyof typeof entityTypes;
+	created_at: Date;
+	updated_at: Date;
 }
 
 const entitySchema: Schema = new Schema({
-	firstName: { type: String },
-	lastName: { type: String },
+	firstName: { type: String, required: true },
+	lastName: { type: String, required: true },
 	identification: { type: String },
-	email: { type: String },
-	password: { type: String },
+	email: { type: String, required: true },
+	password: { type: String, required: true },
 	fiscal_relation: { type: String },
 	type: { type: String },
 });

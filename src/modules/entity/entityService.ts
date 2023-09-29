@@ -14,7 +14,7 @@ const entityDTOKeys = [
 ];
 
 export class EntityService {
-	dto: EntityDTO;
+	private dto: EntityDTO;
 
 	constructor() {
 
@@ -94,5 +94,9 @@ export class EntityService {
 
 	async getEntities() {
 		return await Entity.find({});
+	}
+
+	async delete(id: string): Promise<void> {
+		await Entity.findByIdAndRemove(id);
 	}
 }

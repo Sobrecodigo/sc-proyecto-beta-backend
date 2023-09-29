@@ -11,7 +11,7 @@ entitiesRouter.post('/', async (request: Request, response: Response, next: Next
 		service.setter(body);
 		const entityRecord = await service.signUp();
 
-		const prepareResponse = formatRes('success', response.statusCode, { data: { results: entityRecord.toJSON() } });
+		const prepareResponse = formatRes('success', 201, { data: { results: entityRecord.toJSON() } });
 
 		response.json(prepareResponse);
 	} catch (exception) {
