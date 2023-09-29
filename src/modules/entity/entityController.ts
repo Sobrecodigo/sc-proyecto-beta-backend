@@ -44,5 +44,15 @@ entitiesRouter.put('/:id', async (request: Request, response: Response, next: Ne
 	}
 });
 
+entitiesRouter.delete('/:id', async (request: Request, response: Response, next: NextFunction) => {
+	try {
+		await service.delete(request.params.id);
+		const formattedResponse = formatRes('success', 204, {});
+		return response.json(formattedResponse);
+	} catch (exception) {
+		next(exception);
+	}
+});
+
 
 export default entitiesRouter;
