@@ -1,7 +1,8 @@
 import Account, { IAccount } from './accountModel';
 import { IEntity } from '../entity/entityModel';
+import { parseBool, parseNumber, parseString } from '../../utils';
 
-export interface AccountData extends Omit<IAccount, 'id' | 'created_at' | 'updated_at'> { }
+export interface AccountData extends Pick<IAccount, 'balance' | 'entity_id' | 'state'> { }
 
 class AccountService {
 	private accountData: AccountData;
@@ -9,8 +10,13 @@ class AccountService {
 	constructor() {
 	}
 
-	setter(dto: AccountData) {
-		this.accountData = dto;
+	setter(dto: Record<string, unknown>) {
+		const newAccount: AccountData = {
+			entity_id: parseString(dto.entity_id, 'user id'),
+			balance: parseNumber(dto.balance),
+			state: parseBool(dto.state)
+		};
+		this.accountData = newAccount;
 	}
 
 	async create(entityId: IEntity['_id']): Promise<IAccount> {
