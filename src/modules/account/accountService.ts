@@ -1,8 +1,11 @@
 import Account, { IAccount } from './accountModel';
 import { IEntity } from '../entity/entityModel';
-import { parseBool, parseNumber, parseString } from '../../utils';
+import { notFoundErrorMsg, parseBool, parseNumber } from '../../utils';
 
-export interface AccountData extends Pick<IAccount, 'balance' | 'entity_id' | 'state'> { }
+export interface AccountData extends Pick<IAccount, 'balance' | 'state'> { }
+
+const accountDTOKeys = ['balance', 'state'];
+
 
 class AccountService {
 	private accountData: AccountData;
@@ -12,7 +15,6 @@ class AccountService {
 
 	setter(dto: Record<string, unknown>) {
 		const newAccount: AccountData = {
-			entity_id: parseString(dto.entity_id, 'user id'),
 			balance: parseNumber(dto.balance),
 			state: parseBool(dto.state)
 		};
@@ -25,15 +27,55 @@ class AccountService {
 	}
 
 	async getById(id: string): Promise<IAccount | null> {
-		return await Account.findById(id);
+		const account = await Account.findById(id);
+
+		if (account) return account;
+		throw notFoundErrorMsg('Account record with this ID doesn\'t exist');
 	}
 
-	async update(id: string): Promise<IAccount | null> {
-		return await Account.findByIdAndUpdate(id, this.accountData, { new: true });
+	async update(id: string, dto: Record<string, unknown>): Promise<IAccount | null> {
+		const record = await Account.findById(id);
+
+		if (record) {
+			const updateTheseProperties: Partial<AccountData> = {};
+
+			for (const key of accountDTOKeys) {
+				const valueToUpdate = dto[key];
+				if (!valueToUpdate) {
+					continue;
+				}
+
+				if (key === 'balance') {
+					updateTheseProperties.balance = parseNumber(dto[key]);
+					continue;
+				}
+
+				if (key === 'state') {
+					updateTheseProperties.state = parseBool(dto[key]);
+					continue;
+				}
+
+			}
+
+			const updatedRecord = await Account.findByIdAndUpdate(id, updateTheseProperties, { new: true });
+
+			return updatedRecord;
+		}
+
+		throw notFoundErrorMsg('Entity record with this ID doesn\'t exist');
+
 	}
 
-	async delete(id: string): Promise<void> {
-		await Account.findByIdAndRemove(id);
+	async deleteById(id: string): Promise<void> {
+		const deletedAccount = await Account.findByIdAndRemove(id);
+		if (deletedAccount) return;
+		throw notFoundErrorMsg('Account record with this ID doesn\'t exist');
+	}
+
+	async deleteOne(entityId: string): Promise<void> {
+		const deletedEntityAcccount = await Account.findOneAndRemove({ entity_id: entityId });
+		if (deletedEntityAcccount) return;
+		throw notFoundErrorMsg('Account record with this ID doesn\'t exist');
 	}
 }
 

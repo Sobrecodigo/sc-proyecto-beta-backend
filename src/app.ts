@@ -4,6 +4,7 @@ import { DATABASE_URI, PORT, errorHandler, requestLogger, requireJsonContent } f
 import bodyParser from 'body-parser';
 import entitiesRouter from './modules/entity/entityController';
 import { unknownEndpoint } from './utils';
+import accountRouter from './modules/account/accountController';
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 app.use(requestLogger);
 app.use(requireJsonContent);
 app.use('/api/entity', entitiesRouter);
+app.use('/api/account', accountRouter);
 app.use(unknownEndpoint);
 app.use(errorHandler);
 

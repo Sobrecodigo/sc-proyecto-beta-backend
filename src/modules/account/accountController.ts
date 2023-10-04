@@ -32,8 +32,7 @@ accountRouter.get('/:id', async (request: Request, response: Response, next: Nex
 accountRouter.put('/:id', async (request: Request, response: Response, next: NextFunction) => {
 	try {
 		const dto: AccountData = request.body;
-		accountService.setter(dto);
-		const accountRecord = await accountService.update(request.params.id);
+		const accountRecord = await accountService.update(request.params.id, dto);
 		const formattedResponse = formatRes('success', response.statusCode, { data: { results: accountRecord.toJSON() } });
 		return response.json(formattedResponse);
 	} catch (exception) {
@@ -43,7 +42,7 @@ accountRouter.put('/:id', async (request: Request, response: Response, next: Nex
 
 accountRouter.delete('/:id', async (request: Request, response: Response, next: NextFunction) => {
 	try {
-		await accountService.delete(request.params.id);
+		await accountService.deleteById(request.params.id);
 		const formattedResponse = formatRes('success', 204, {});
 		return response.json(formattedResponse);
 	} catch (exception) {
