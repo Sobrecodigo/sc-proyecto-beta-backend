@@ -11,7 +11,7 @@ entitiesRouter.post('/', async (request: Request, response: Response, next: Next
 		service.setter(body);
 		const entityRecord = await service.signUp();
 
-		const prepareResponse = formatRes('success', response.statusCode, { data: { results: entityRecord.toJSON() } });
+		const prepareResponse = formatRes('success', 201, { data: { results: entityRecord.toJSON() } });
 
 		response.json(prepareResponse);
 	} catch (exception) {
@@ -39,6 +39,16 @@ entitiesRouter.put('/:id', async (request: Request, response: Response, next: Ne
 		const prepareResponse = formatRes('success', response.statusCode, { data: { results: updatedEntity.toJSON() } });
 
 		response.json(prepareResponse);
+	} catch (exception) {
+		next(exception);
+	}
+});
+
+entitiesRouter.delete('/:id', async (request: Request, response: Response, next: NextFunction) => {
+	try {
+		await service.delete(request.params.id);
+		const formattedResponse = formatRes('success', 204, {});
+		return response.json(formattedResponse);
 	} catch (exception) {
 		next(exception);
 	}

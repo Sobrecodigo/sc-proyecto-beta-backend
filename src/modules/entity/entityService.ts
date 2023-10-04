@@ -1,4 +1,5 @@
-import { parseEmail, parseEntityType, parseString } from '../../utils';
+import { notFoundErrorMsg, parseEmail, parseEntityType, parseString, validationErrorMsg } from '../../utils';
+import AccountService from '../account/accountService';
 import Entity, { IEntity } from './entityModel';
 import bcrypt from 'bcrypt';
 
@@ -14,10 +15,10 @@ const entityDTOKeys = [
 ];
 
 export class EntityService {
-	dto: EntityDTO;
+	private dto: EntityDTO;
+	private accountService = new AccountService();
 
 	constructor() {
-
 	}
 
 	setter(dto?: Record<string, unknown>) {
@@ -49,20 +50,25 @@ export class EntityService {
 
 				const savedEntity = await entity.save();
 
+				this.accountService.setter({
+					balance: 0,
+					state: true
+				});
+
+				await this.accountService.create(savedEntity.id);
+
 				return savedEntity;
 			} catch (error) {
 				throw new Error(error);
 			}
 		}
-
-		throw new Error(
-			'Entity creation request rejected, submitted password is too short',
-		);
+		throw validationErrorMsg('Entity creation request rejected, submitted password is too short');
 	}
 
 	async update(id: string, dto: Record<string, unknown>) {
-		try {
-			await Entity.findById(id);
+		const record = await Entity.findById(id);
+
+		if (record) {
 			const updateTheseProperties: Partial<EntityDTO> = {};
 
 			for (const key of entityDTOKeys) {
@@ -87,12 +93,18 @@ export class EntityService {
 			const updatedRecord = await Entity.findByIdAndUpdate(id, updateTheseProperties, { new: true });
 
 			return updatedRecord;
-		} catch (error) {
-			throw new Error(error);
 		}
+
+		throw notFoundErrorMsg('Entity record with this ID doesn\'t exist');
+
 	}
 
 	async getEntities() {
 		return await Entity.find({});
+	}
+
+	async delete(id: string): Promise<void> {
+		const removedEntity = await Entity.findByIdAndRemove(id);
+		await this.accountService.deleteOne(removedEntity.id);
 	}
 }
