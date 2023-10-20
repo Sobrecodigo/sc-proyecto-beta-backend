@@ -1,4 +1,4 @@
-import { BAD_REQUEST, NOT_FOUND, statusCodeKeys } from '../constants';
+import { BAD_REQUEST, NOT_FOUND, UNAUTHORAIZED, statusCodeKeys } from '../constants';
 import { entityTypes } from '../types';
 import { DataResponse, ResponseObject } from '../types';
 
@@ -26,6 +26,8 @@ const buildErrorMsg = (status: keyof typeof statusCodeKeys) => (msg: string) => 
 export const validationErrorMsg = buildErrorMsg(BAD_REQUEST);
 
 export const notFoundErrorMsg = buildErrorMsg(NOT_FOUND);
+
+export const UnauthorizedErrorMsg = buildErrorMsg(UNAUTHORAIZED);
 
 export const parseEmail = (email: unknown): string => {
 	if (!email || !isString(email)) {
