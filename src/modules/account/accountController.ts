@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import AccountService, { AccountData } from './accountService';
 import { IEntity } from '../entity/entityModel';
-import { formatRes } from '../../utils';
+import { authenticateToken, formatRes } from '../../utils';
 
 const accountRouter = Router();
 const accountService = new AccountService();
 
-accountRouter.post('/', async (request: Request, response: Response, next: NextFunction) => {
+accountRouter.post('/', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
 	try {
 		const dto: AccountData = request.body;
 		accountService.setter(dto);
@@ -19,7 +19,7 @@ accountRouter.post('/', async (request: Request, response: Response, next: NextF
 	}
 });
 
-accountRouter.get('/:id', async (request: Request, response: Response, next: NextFunction) => {
+accountRouter.get('/:id', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
 	try {
 		const accountRecord = await accountService.getById(request.params.id);
 		const formattedResponse = formatRes('success', response.statusCode, { data: { results: accountRecord.toJSON() } });
@@ -29,7 +29,7 @@ accountRouter.get('/:id', async (request: Request, response: Response, next: Nex
 	}
 });
 
-accountRouter.put('/:id', async (request: Request, response: Response, next: NextFunction) => {
+accountRouter.put('/:id', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
 	try {
 		const dto: AccountData = request.body;
 		const accountRecord = await accountService.update(request.params.id, dto);
@@ -40,7 +40,7 @@ accountRouter.put('/:id', async (request: Request, response: Response, next: Nex
 	}
 });
 
-accountRouter.delete('/:id', async (request: Request, response: Response, next: NextFunction) => {
+accountRouter.delete('/:id', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
 	try {
 		await accountService.deleteById(request.params.id);
 		const formattedResponse = formatRes('success', 204, {});

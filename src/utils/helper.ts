@@ -27,7 +27,7 @@ export const validationErrorMsg = buildErrorMsg(BAD_REQUEST);
 
 export const notFoundErrorMsg = buildErrorMsg(NOT_FOUND);
 
-export const UnauthorizedErrorMsg = buildErrorMsg(UNAUTHORAIZED);
+export const unauthoraizedErrorMsg = buildErrorMsg(UNAUTHORAIZED);
 
 export const parseEmail = (email: unknown): string => {
 	if (!email || !isString(email)) {

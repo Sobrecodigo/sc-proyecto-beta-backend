@@ -36,7 +36,7 @@ export class EntityService {
 		this.dto = newEntity;
 	}
 
-	async signUp() {
+	async create() {
 
 		if (this.dto?.password.length >= 8) {
 			try {
@@ -97,6 +97,14 @@ export class EntityService {
 
 		throw notFoundErrorMsg('Entity record with this ID doesn\'t exist');
 
+	}
+
+	async getByEmail(email: string): Promise<IEntity | null> {
+		const entity = await Entity.findOne({ email });
+
+		if (entity) return entity;
+		
+		throw notFoundErrorMsg('Entity record with this email doesn\'t exist');
 	}
 
 	async getEntities() {

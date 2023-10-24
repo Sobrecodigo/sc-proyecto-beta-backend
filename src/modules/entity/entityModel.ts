@@ -18,7 +18,7 @@ const entitySchema: Schema = new Schema({
 	firstName: { type: String, required: true },
 	lastName: { type: String, required: true },
 	identification: { type: String },
-	email: { type: String, required: true },
+	email: { type: String, required: true, unique: true },
 	password: { type: String, required: true },
 	fiscal_relation: { type: String },
 	type: { type: String },

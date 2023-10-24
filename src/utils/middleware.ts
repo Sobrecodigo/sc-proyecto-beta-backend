@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import logger from './logger';
 import { Error } from 'mongoose';
-import { UnauthorizedErrorMsg, formatRes } from './helper';
-import { statusCodeKeys } from '../constants';
+import { unauthoraizedErrorMsg, formatRes } from './helper';
+import { BAD_REQUEST, MONGO_ERROR, statusCodeKeys } from '../constants';
 import { JWT_SECRET } from './config';
 import { RequestWithTokenPayload } from '../types/request';
 
@@ -21,6 +21,11 @@ export const errorHandler = (error: Error, _request: Request, response: Response
 	const formatSendError = (code: number, message: string) => formatRes('error', code, { message });
 
 	if (error.name === 'Error') {
+
+		if (error.message.match(MONGO_ERROR)) {
+			const badRequest = statusCodeKeys[BAD_REQUEST];
+			return response.status(badRequest).send(formatSendError(badRequest, error.message));
+		}
 		const [key, message] = error.message.split('-');
 		const statusCode = statusCodeKeys[key];
 		return response.status(statusCode).send(formatSendError(statusCode, message));
@@ -45,12 +50,12 @@ export function authenticateToken(
 	const token = req.headers.authorization?.split(' ')[1];
 
 	if (!token) {
-		throw UnauthorizedErrorMsg('Header\'s token is invalid');
+		throw unauthoraizedErrorMsg('Header\'s token is invalid');
 	}
 
 	jwt.verify(token, JWT_SECRET, (err, decoded) => {
 		if (err) {
-			return UnauthorizedErrorMsg('Invalid token');
+			return unauthoraizedErrorMsg('Invalid token');
 		}
 
 		//NOTE: Access user attribute to get the attached decoded token.

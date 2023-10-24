@@ -1,15 +1,15 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { EntityService } from './entityService';
-import { formatRes } from '../../utils';
+import { authenticateToken, formatRes } from '../../utils';
 
 const entitiesRouter = Router();
 const service = new EntityService();
 
-entitiesRouter.post('/', async (request: Request, response: Response, next: NextFunction) => {
+entitiesRouter.post('/', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
 	const { body } = request;
 	try {
 		service.setter(body);
-		const entityRecord = await service.signUp();
+		const entityRecord = await service.create();
 
 		const prepareResponse = formatRes('success', 201, { data: { results: entityRecord.toJSON() } });
 
@@ -19,7 +19,7 @@ entitiesRouter.post('/', async (request: Request, response: Response, next: Next
 	}
 });
 
-entitiesRouter.get('/all', async (_request: Request, response: Response, next: NextFunction) => {
+entitiesRouter.get('/all', authenticateToken, async (_request: Request, response: Response, next: NextFunction) => {
 	try {
 		const entities = (await service.getEntities()).map(entity => entity.toJSON());
 
@@ -31,7 +31,7 @@ entitiesRouter.get('/all', async (_request: Request, response: Response, next: N
 	}
 });
 
-entitiesRouter.put('/:id', async (request: Request, response: Response, next: NextFunction) => {
+entitiesRouter.put('/:id', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
 	const { body } = request;
 	try {
 		const updatedEntity = await service.update(request.params.id, body);
@@ -44,7 +44,7 @@ entitiesRouter.put('/:id', async (request: Request, response: Response, next: Ne
 	}
 });
 
-entitiesRouter.delete('/:id', async (request: Request, response: Response, next: NextFunction) => {
+entitiesRouter.delete('/:id', authenticateToken, async (request: Request, response: Response, next: NextFunction) => {
 	try {
 		await service.delete(request.params.id);
 		const formattedResponse = formatRes('success', 204, {});
