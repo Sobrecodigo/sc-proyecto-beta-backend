@@ -15,6 +15,7 @@ const accountSchema = new Schema<IAccount>({
 		type: Schema.Types.ObjectId,
 		ref: 'Entity',
 		required: true,
+		unique: true
 	},
 	balance: {
 		type: Number,

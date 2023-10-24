@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import entitiesRouter from './modules/entity/entityController';
 import { unknownEndpoint } from './utils';
 import accountRouter from './modules/account/accountController';
+import authRouter from './modules/authentication/Authcontroller';
 
 const app = express();
 
@@ -23,6 +24,7 @@ serverConnected();
 app.use(bodyParser.json());
 app.use(requestLogger);
 app.use(requireJsonContent);
+app.use('/api/', authRouter);
 app.use('/api/entity', entitiesRouter);
 app.use('/api/account', accountRouter);
 app.use(unknownEndpoint);
