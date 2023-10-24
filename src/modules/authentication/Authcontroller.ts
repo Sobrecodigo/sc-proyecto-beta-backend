@@ -25,8 +25,8 @@ authRouter.post('/signup', async (request: Request, response: Response, next: Ne
 	}
 });
 
-authRouter.post('/login', async (req: Request, res: Response) => {
-	const { email, password } = req.body;
+authRouter.post('/login', async (request: Request, response: Response) => {
+	const { email, password } = request.body;
 
 	const entity = await service.getByEmail(email);
 
@@ -43,7 +43,9 @@ authRouter.post('/login', async (req: Request, res: Response) => {
 			expiresIn: '1h',
 		});
 
-		res.json({ token });
+		const prepareResponse = formatRes('success', 201, { data: { results: { token } } });
+
+		response.json(prepareResponse);
 	});
 });
 
